@@ -126,5 +126,39 @@ app.delete('/api/media/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Chat Routes
+const { GoogleGenAI } = require('@google/genai');
+
+app.post('/api/chat', authenticateToken, async (req, res) => {
+  try {
+    const { message } = req.body;
+    
+    // Fetch user's watchlist to provide context to the AI
+    const media = await Media.find({ user: req.user.id });
+    const watchlistContext = media.map(m => `${m.title} (${m.type}, status: ${m.status}, rating: ${m.rating || 'N/A'})`).join('\n');
+    
+    const prompt = `
+You are a helpful assistant for a movie and TV show tracking app called WatchBox.
+The user is asking: "${message}"
+
+Here is the user's current watchlist context:
+${watchlistContext}
+
+Provide a helpful, friendly, and concise response. If they ask for recommendations, suggest something based on their highly rated completed items, or suggest similar media.
+`;
+
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
+    
+    res.json({ reply: response.text });
+  } catch (error) {
+    console.error('Chat error:', error);
+    res.status(500).json({ error: 'Failed to generate response' });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

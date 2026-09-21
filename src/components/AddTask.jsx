@@ -45,7 +45,6 @@ export default function AddTask({ onAddTask }) {
         <input 
           id="title"
           type="text" 
-          placeholder="e.g. The Dark Knight" 
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required

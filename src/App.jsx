@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import Watchlist from './components/Watchlist';
 import MediaDetail from './components/MediaDetail';
 import Auth from './components/Auth';
+import Chatbot from './components/Chatbot';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 const API_URL = `${API_BASE_URL}/api/media`;
@@ -102,6 +103,7 @@ function App() {
         <Route path="/media/:id" element={<MediaDetail tasks={tasks} onRate={handleRate} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+      <Chatbot token={token} />
     </BrowserRouter>
   );
 }

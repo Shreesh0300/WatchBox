@@ -5,10 +5,12 @@ export default function Auth({ setToken }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
 
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
@@ -36,6 +38,8 @@ export default function Auth({ setToken }) {
       }
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,8 +85,8 @@ export default function Auth({ setToken }) {
             />
           </div>
 
-          <button type="submit" className="btn-submit" style={{ marginTop: '1rem' }}>
-            {isLogin ? 'Login' : 'Register'}
+          <button type="submit" className="btn-submit" style={{ marginTop: '1rem' }} disabled={isLoading}>
+            {isLoading ? (isLogin ? 'Logging in...' : 'Registering...') : (isLogin ? 'Login' : 'Register')}
           </button>
         </form>
 

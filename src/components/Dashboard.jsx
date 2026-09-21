@@ -27,3 +27,4 @@ export default function Dashboard({ tasks, onAddTask }) {
     </main>
   );
 }
+
