@@ -29,6 +29,7 @@ app.post('/api/auth/register', async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
+    console.error('Register error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -45,6 +46,7 @@ app.post('/api/auth/login', async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, email: user.email } });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -76,6 +78,7 @@ app.get('/api/media', authenticateToken, async (req, res) => {
       rating: m.rating
     })));
   } catch (error) {
+    console.error('Get media error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -93,6 +96,7 @@ app.post('/api/media', authenticateToken, async (req, res) => {
       rating: saved.rating
     });
   } catch (error) {
+    console.error('Post media error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -112,6 +116,7 @@ app.put('/api/media/:id', authenticateToken, async (req, res) => {
       rating: updated.rating
     });
   } catch (error) {
+    console.error('Put media error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -122,6 +127,7 @@ app.delete('/api/media/:id', authenticateToken, async (req, res) => {
     if (!media) return res.status(404).json({ error: 'Not found' });
     res.json({ success: true });
   } catch (error) {
+    console.error('Delete media error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });

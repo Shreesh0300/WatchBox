@@ -43,10 +43,11 @@ export default function Chatbot({ token }) {
       if (response.ok) {
         setMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
       } else {
-        setMessages(prev => [...prev, { role: 'ai', text: 'Sorry, I encountered an error. Please try again.' }]);
+        setMessages(prev => [...prev, { role: 'ai', text: `Sorry, I encountered an error: ${data.error || 'Unknown error'}` }]);
       }
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'ai', text: 'Network error. Please check your connection.' }]);
+      console.error("Chat error:", error);
+      setMessages(prev => [...prev, { role: 'ai', text: `Error: ${error.message}` }]);
     } finally {
       setIsLoading(false);
     }
