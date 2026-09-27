@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 
 export default function Chatbot({ token }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const [messages, setMessages] = useState([
     { role: 'ai', text: 'Hi! I am your WatchBox assistant. I can give you recommendations based on your watchlist or answer questions about movies and TV shows.' }
   ]);
@@ -18,6 +19,7 @@ export default function Chatbot({ token }) {
   }, [messages, isOpen]);
 
   const toggleChat = () => setIsOpen(!isOpen);
+  const toggleFullScreen = () => setIsFullScreen(!isFullScreen);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,10 +60,30 @@ export default function Chatbot({ token }) {
   return (
     <div className="chatbot-container" style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 99999 }}>
       {isOpen && (
-        <div className="chat-window">
+        <div 
+          className={`chat-window ${isFullScreen ? 'full-screen' : ''}`}
+          style={isFullScreen ? {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            borderRadius: 0,
+            zIndex: 999999,
+            animation: 'none',
+            transform: 'none',
+            maxWidth: '100%',
+            maxHeight: '100%'
+          } : { marginBottom: '1rem' }}
+        >
           <div className="chat-header">
             <h3>WatchBox AI</h3>
-            <button className="close-btn" onClick={toggleChat}>×</button>
+            <div>
+              <button className="close-btn" style={{ marginRight: '10px' }} onClick={toggleFullScreen}>
+                {isFullScreen ? '↙️' : '↗️'}
+              </button>
+              <button className="close-btn" onClick={toggleChat}>×</button>
+            </div>
           </div>
           <div className="chat-messages">
             {messages.map((msg, index) => (
